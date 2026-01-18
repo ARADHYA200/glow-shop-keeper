@@ -36,10 +36,12 @@ interface Category {
   name: string;
 }
 
+type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
 interface Order {
   id: string;
   total_amount: number;
-  status: string;
+  status: OrderStatus;
   shipping_address: string | null;
   phone: string | null;
   created_at: string;
@@ -185,7 +187,7 @@ export default function AdminPage() {
     }
   };
 
-  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+  const updateOrderStatus = async (orderId: string, newStatus: OrderStatus) => {
     const { error } = await supabase
       .from('orders')
       .update({ status: newStatus })
@@ -450,7 +452,7 @@ export default function AdminPage() {
                             {order.order_items.map(item => `${item.product_name} (×${item.quantity})`).join(', ')}
                           </p>
                         </div>
-                        <Select value={order.status} onValueChange={(val) => updateOrderStatus(order.id, val)}>
+                        <Select value={order.status} onValueChange={(val) => updateOrderStatus(order.id, val as OrderStatus)}>
                           <SelectTrigger className="w-40">
                             <SelectValue />
                           </SelectTrigger>
