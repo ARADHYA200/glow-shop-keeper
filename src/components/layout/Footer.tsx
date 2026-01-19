@@ -41,21 +41,18 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Categories */}
+          {/* Support */}
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Categories</h4>
+            <h4 className="font-semibold text-foreground mb-4">Support</h4>
             <nav className="flex flex-col gap-2">
-              <Link to="/products?category=mixers" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Mixers & Grinders
+              <Link to="/orders" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Track Order
               </Link>
-              <Link to="/products?category=induction" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Induction Cooktops
+              <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Privacy Policy
               </Link>
-              <Link to="/products?category=irons" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Irons & Presses
-              </Link>
-              <Link to="/products?category=kitchen" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Kitchen Appliances
+              <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Terms of Service
               </Link>
             </nav>
           </div>
