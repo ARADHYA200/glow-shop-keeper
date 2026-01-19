@@ -32,9 +32,6 @@ export function Footer() {
               <Link to="/categories" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Categories
               </Link>
-              <Link to="/orders" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Track Order
-              </Link>
               <Link to="/auth" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Sign In
               </Link>
@@ -45,9 +42,6 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Support</h4>
             <nav className="flex flex-col gap-2">
-              <Link to="/orders" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Track Order
-              </Link>
               <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Privacy Policy
               </Link>
@@ -61,17 +55,17 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Contact Us</h4>
             <div className="flex flex-col gap-3">
-              <a href="tel:+919876543210" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="tel:+916395091830" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Phone className="w-4 h-4" />
-                +91 98765 43210
+                +91 63950 91830
               </a>
-              <a href="mailto:info@satishagencies.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:atharvagarwal2k131988@gmail.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Mail className="w-4 h-4" />
-                info@satishagencies.com
+                atharvagarwal2k131988@gmail.com
               </a>
               <div className="flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>123 Electronics Market, Main Road, City - 560001</span>
+                <span>College Road, Bareilly - 243001</span>
               </div>
             </div>
           </div>
