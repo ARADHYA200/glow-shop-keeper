@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, Shield, Truck } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Layout } from '@/components/layout/Layout';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
@@ -8,7 +8,7 @@ import { CategoryShowcase } from '@/components/home/CategoryShowcase';
 const features = [
   { icon: Zap, title: 'Premium Quality', description: 'Top brands with warranty' },
   { icon: Shield, title: 'Secure Shopping', description: 'Safe & encrypted payments' },
-  { icon: Truck, title: 'Fast Delivery', description: 'Quick & reliable shipping' },
+  { icon: Heart, title: 'Customer Satisfaction', description: '100% satisfaction guaranteed' },
 ];
 
 const Index = () => {
