@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Zap, Shield, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Layout } from '@/components/layout/Layout';
+import { FeaturedProducts } from '@/components/home/FeaturedProducts';
+import { CategoryShowcase } from '@/components/home/CategoryShowcase';
 
 const features = [
   { icon: Zap, title: 'Premium Quality', description: 'Top brands with warranty' },
@@ -57,6 +59,12 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Category Showcase */}
+      <CategoryShowcase />
+
+      {/* Featured Products */}
+      <FeaturedProducts />
 
       {/* CTA */}
       <section className="py-20">
