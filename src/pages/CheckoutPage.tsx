@@ -102,7 +102,6 @@ export default function CheckoutPage() {
           user_id: user!.id,
           total_amount: total,
           shipping_address: address,
-          phone: phone,
           status: 'pending',
         })
         .select()
