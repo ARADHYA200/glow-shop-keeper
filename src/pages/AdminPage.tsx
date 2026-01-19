@@ -34,6 +34,8 @@ interface Product {
 interface Category {
   id: string;
   name: string;
+  description: string | null;
+  image_url: string | null;
 }
 
 type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
@@ -58,7 +60,9 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   // Product form state
   const [productName, setProductName] = useState('');
@@ -68,6 +72,11 @@ export default function AdminPage() {
   const [productCategory, setProductCategory] = useState('');
   const [productImage, setProductImage] = useState('');
   const [productAvailable, setProductAvailable] = useState(true);
+
+  // Category form state
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryDescription, setCategoryDescription] = useState('');
+  const [categoryImage, setCategoryImage] = useState('');
 
   useEffect(() => {
     if (!authLoading) {
@@ -99,6 +108,72 @@ export default function AdminPage() {
   const fetchCategories = async () => {
     const { data } = await supabase.from('categories').select('*').order('name');
     setCategories(data || []);
+  };
+
+  const resetCategoryForm = () => {
+    setCategoryName('');
+    setCategoryDescription('');
+    setCategoryImage('');
+    setEditingCategory(null);
+  };
+
+  const openEditCategoryDialog = (category: Category) => {
+    setEditingCategory(category);
+    setCategoryName(category.name);
+    setCategoryDescription(category.description || '');
+    setCategoryImage(category.image_url || '');
+    setIsCategoryDialogOpen(true);
+  };
+
+  const handleSaveCategory = async () => {
+    if (!categoryName) {
+      toast.error('Category name is required');
+      return;
+    }
+
+    const categoryData = {
+      name: categoryName,
+      description: categoryDescription || null,
+      image_url: categoryImage || null,
+    };
+
+    if (editingCategory) {
+      const { error } = await supabase
+        .from('categories')
+        .update(categoryData)
+        .eq('id', editingCategory.id);
+      
+      if (error) {
+        toast.error('Failed to update category');
+      } else {
+        toast.success('Category updated successfully');
+      }
+    } else {
+      const { error } = await supabase.from('categories').insert(categoryData);
+      
+      if (error) {
+        toast.error('Failed to add category');
+      } else {
+        toast.success('Category added successfully');
+      }
+    }
+
+    setIsCategoryDialogOpen(false);
+    resetCategoryForm();
+    fetchCategories();
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    if (!confirm('Are you sure? Products in this category will have no category.')) return;
+    
+    const { error } = await supabase.from('categories').delete().eq('id', id);
+    
+    if (error) {
+      toast.error('Failed to delete category');
+    } else {
+      toast.success('Category deleted');
+      fetchCategories();
+    }
   };
 
   const fetchOrders = async () => {
@@ -280,6 +355,7 @@ export default function AdminPage() {
         <Tabs defaultValue="products">
           <TabsList className="mb-4">
             <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="categories">Categories</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
           </TabsList>
 
@@ -470,6 +546,77 @@ export default function AdminPage() {
                           Ship to: {order.shipping_address}
                         </p>
                       )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="categories">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Categories ({categories.length})</CardTitle>
+                <Dialog open={isCategoryDialogOpen} onOpenChange={(open) => {
+                  setIsCategoryDialogOpen(open);
+                  if (!open) resetCategoryForm();
+                }}>
+                  <DialogTrigger asChild>
+                    <Button className="gradient-primary text-primary-foreground">
+                      <Plus className="w-4 h-4 mr-2" /> Add Category
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                      <DialogTitle>{editingCategory ? 'Edit Category' : 'Add New Category'}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div className="space-y-2">
+                        <Label>Name *</Label>
+                        <Input value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Description</Label>
+                        <Textarea value={categoryDescription} onChange={(e) => setCategoryDescription(e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Image URL</Label>
+                        <Input value={categoryImage} onChange={(e) => setCategoryImage(e.target.value)} placeholder="https://..." />
+                      </div>
+                      <Button className="w-full gradient-primary text-primary-foreground" onClick={handleSaveCategory}>
+                        {editingCategory ? 'Update Category' : 'Add Category'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {categories.map(category => (
+                    <div key={category.id} className="border border-border rounded-lg overflow-hidden">
+                      <div className="h-32 overflow-hidden bg-muted">
+                        {category.image_url ? (
+                          <img src={category.image_url} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
+                            <span className="text-3xl font-bold text-primary/50">{category.name[0]}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-foreground">{category.name}</h3>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1 min-h-[2.5rem]">
+                          {category.description || 'No description'}
+                        </p>
+                        <div className="flex gap-2 mt-4">
+                          <Button size="sm" variant="outline" className="flex-1" onClick={() => openEditCategoryDialog(category)}>
+                            <Edit className="w-4 h-4 mr-1" /> Edit
+                          </Button>
+                          <Button size="sm" variant="outline" className="text-destructive" onClick={() => handleDeleteCategory(category.id)}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
